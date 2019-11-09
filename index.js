@@ -1,4 +1,5 @@
 const {app, BrowserWindow, ipcMain, Menu} = require('electron');
+const LolAPI = require('./LolAPI.js');
 
 const option = {
     width:1200,
@@ -11,6 +12,7 @@ const option = {
 };
 
 let win = null;
+let api = new LolAPI();
 
 app.on("ready", ()=>{
     Menu.setApplicationMenu(null);
@@ -24,5 +26,7 @@ ipcMain.on("openDev", ()=>{
 })
 
 ipcMain.on("summoner", (e, data)=>{
-    console.log(data);
+    api.loadSummoner(data.name).then(data=>{
+        e.reply("summonerData", data);
+    });
 });
